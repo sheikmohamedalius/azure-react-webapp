@@ -1,0 +1,102 @@
+.treatment-plan-container {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .treatment-plan-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .description {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #555;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+    height: 120px;
+  }
+  
+  .generate-button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .generate-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.02);
+  }
+  
+  .treatment-plan-result {
+    margin-top: 25px;
+    padding: 20px;
+    background-color: #e9f7ef;
+    border: 1px solid #d4edda;
+    border-radius: 6px;
+  }
+  
+  .treatment-plan-result h3 {
+    margin: 0 0 10px;
+    color: #155724;
+  }
+  
+  .treatment-plan-result p {
+    margin: 0;
+    color: #155724;
+    font-size: 14px;
+  }
+  
+  @media (max-width: 768px) {
+    .treatment-plan-container {
+      padding: 20px;
+    }
+  
+    .generate-button {
+      font-size: 14px;
+    }
+  }

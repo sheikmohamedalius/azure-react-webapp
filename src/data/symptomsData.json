@@ -1,0 +1,22 @@
+[
+  {
+    "symptom": "fever",
+    "suggestion": "Take paracetamol and stay hydrated. Consult a doctor if it persists."
+  },
+  {
+    "symptom": "cough",
+    "suggestion": "Drink warm fluids and use a cough suppressant. Visit a doctor if it worsens."
+  },
+  {
+    "symptom": "headache",
+    "suggestion": "Rest in a quiet, dark room and take ibuprofen if needed."
+  },
+  {
+    "symptom": "stomach pain",
+    "suggestion": "Avoid spicy foods and take antacids. Seek medical advice if severe."
+  },
+  {
+    "symptom": "fatigue",
+    "suggestion": "Ensure proper sleep and nutrition. Consult a doctor if it persists."
+  }
+]
