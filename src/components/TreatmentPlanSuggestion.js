@@ -30,7 +30,7 @@ function TreatmentPlanSuggestion() {
 
   return (
     <div className="treatment-plan-container">
-      <h2>Automate Treatment Plan Suggestion</h2>
+      <h2>AI-Powered Treatment plans</h2>
       <p className="description">
         Enter the patient's name and symptoms to generate a suggested treatment plan.
       </p>
