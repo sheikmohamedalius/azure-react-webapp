@@ -41,6 +41,7 @@ function TreatmentPlanSuggestion() {
 
   const handleGeneratePlan = async () => {
     console.log('Environment Variables:', process.env);
+    console.log('Environment Variables:', process.env.REACT_APP_OPENAI_API_KEY);
     
     if (patientName && symptoms && medicalHistory) {
       setLoading(true);
