@@ -40,8 +40,7 @@ function TreatmentPlanSuggestion() {
   const apiKey = process.env.REACT_APP_OPENAI;
 
   const handleGeneratePlan = async () => {
-    console.log('Environment Variables:', process.env);
-    console.log('Environment Variables:', process.env.REACT_APP_OPENAI);
+    
     
     if (patientName && symptoms && medicalHistory) {
       setLoading(true);
