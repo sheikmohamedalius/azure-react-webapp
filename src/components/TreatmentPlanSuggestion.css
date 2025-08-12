@@ -1,3 +1,4 @@
+/* General container styling */
 .treatment-plan-container {
     max-width: 600px;
     margin: 30px auto;
@@ -8,6 +9,7 @@
     font-family: 'Arial', sans-serif;
   }
   
+  /* Header styling */
   .treatment-plan-container h2 {
     text-align: center;
     color: #333;
@@ -21,8 +23,10 @@
     margin-bottom: 20px;
   }
   
+  /* Form group styling */
   .form-group {
     margin-bottom: 20px;
+    position: relative; /* For dropdown positioning */
   }
   
   .form-group label {
@@ -50,9 +54,37 @@
   
   .form-group textarea {
     resize: vertical;
-    height: 120px;
+    height: 100px;
   }
   
+  /* Suggestions dropdown styling */
+  .suggestions-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .suggestions-list li {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .suggestions-list li:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Button styling */
   .generate-button {
     display: block;
     width: 100%;
@@ -72,31 +104,66 @@
     transform: scale(1.02);
   }
   
+  .generate-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  /* Error message styling */
+  .error-message {
+    color: #d9534f;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+  /* Container for the treatment plan result */
   .treatment-plan-result {
     margin-top: 25px;
     padding: 20px;
-    background-color: #e9f7ef;
+    background-color: #f9f9f9;
     border: 1px solid #d4edda;
-    border-radius: 6px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
   }
   
+  /* Title for the treatment plan */
   .treatment-plan-result h3 {
     margin: 0 0 10px;
     color: #155724;
+    font-size: 18px;
+    font-weight: bold;
   }
   
-  .treatment-plan-result p {
-    margin: 0;
-    color: #155724;
-    font-size: 14px;
+  /* Content of the treatment plan */
+  .treatment-plan-content {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.6;
+    white-space: pre-wrap; /* Preserve line breaks in the treatment plan */
   }
   
+  /* Responsive design for smaller screens */
   @media (max-width: 768px) {
     .treatment-plan-container {
       padding: 20px;
     }
   
     .generate-button {
+      font-size: 14px;
+    }
+  
+    .form-group input,
+    .form-group textarea {
+      font-size: 13px;
+    }
+  
+    .treatment-plan-result h3 {
+      font-size: 16px;
+    }
+  
+    .treatment-plan-content {
       font-size: 14px;
     }
   }
