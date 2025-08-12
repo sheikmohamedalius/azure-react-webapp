@@ -37,8 +37,11 @@ function TreatmentPlanSuggestion() {
   const [error, setError] = useState('');
   const [filteredSymptoms, setFilteredSymptoms] = useState([]);
   const [filteredMedicalHistory, setFilteredMedicalHistory] = useState([]);
+  const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
 
   const handleGeneratePlan = async () => {
+    console.log('Environment Variables:', process.env);
+    
     if (patientName && symptoms && medicalHistory) {
       setLoading(true);
       setError('');
@@ -48,7 +51,7 @@ function TreatmentPlanSuggestion() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer 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`, // Replace with your OpenAI API key
+            Authorization: `Bearer ${apiKey}`, // Replace with your OpenAI API key
           },
           body: JSON.stringify({
             model: 'gpt-4',
