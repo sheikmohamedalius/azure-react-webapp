@@ -37,11 +37,11 @@ function TreatmentPlanSuggestion() {
   const [error, setError] = useState('');
   const [filteredSymptoms, setFilteredSymptoms] = useState([]);
   const [filteredMedicalHistory, setFilteredMedicalHistory] = useState([]);
-  const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+  const apiKey = process.env.REACT_APP_OPENAI;
 
   const handleGeneratePlan = async () => {
     console.log('Environment Variables:', process.env);
-    console.log('Environment Variables:', process.env.REACT_APP_OPENAI_API_KEY);
+    console.log('Environment Variables:', process.env.REACT_APP_OPENAI);
     
     if (patientName && symptoms && medicalHistory) {
       setLoading(true);
