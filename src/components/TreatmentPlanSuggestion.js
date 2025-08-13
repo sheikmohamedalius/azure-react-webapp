@@ -1,136 +1,139 @@
 import React, { useState } from 'react';
 import './TreatmentPlanSuggestion.css';
-
-const symptomsList = [
-  'fever',
-  'cough',
-  'fatigue',
-  'headache',
-  'nausea',
-  'dizziness',
-  'chest pain',
-  'shortness of breath',
-  'abdominal pain',
-  'diarrhea',
-  'joint pain',
-  'swelling',
-];
-
-const medicalHistoryList = [
-  'diabetes',
-  'hypertension',
-  'asthma',
-  'migraine',
-  'anemia',
-  'arthritis',
-  'high cholesterol',
-  'irritable bowel syndrome (IBS)',
-  'obesity',
-];
+import Tesseract from 'tesseract.js';
 
 function TreatmentPlanSuggestion() {
   const [patientName, setPatientName] = useState('');
   const [symptoms, setSymptoms] = useState('');
   const [medicalHistory, setMedicalHistory] = useState('');
+  const [labReport, setLabReport] = useState(null);
+  const [extractedText, setExtractedText] = useState('');
   const [treatmentPlan, setTreatmentPlan] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [filteredSymptoms, setFilteredSymptoms] = useState([]);
-  const [filteredMedicalHistory, setFilteredMedicalHistory] = useState([]);
+
   const apiKey = process.env.REACT_APP_OPENAI;
 
-  const handleGeneratePlan = async () => {
-    
-    
-    if (patientName && symptoms && medicalHistory) {
-      setLoading(true);
-      setError('');
-      setTreatmentPlan('');
-      try {
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            Authorization: `Bearer ${apiKey}`, // Replace with your OpenAI API key
-          },
-          body: JSON.stringify({
-            model: 'gpt-4',
-            messages: [
-              {
-                role: 'system',
-                content: 'You are a helpful medical assistant that provides treatment plans based on symptoms and medical history.',
-              },
-              {
-                role: 'user',
-                content: `Suggest a treatment plan for a patient named ${patientName} with the following symptoms: ${symptoms}. Medical history: ${medicalHistory}.`,
-              },
-            ],
-            max_tokens: 150,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch treatment plan. Please try again.');
+  // Handle file upload
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      setError('No file selected. You can proceed without uploading a lab report.');
+      setLabReport(null); // Clear any previously uploaded file
+      return;
+    }
+  
+    // Validate file type
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    if (!validImageTypes.includes(file.type)) {
+      setError('Invalid file type. Please upload an image file (JPEG or PNG).');
+      return;
+    }
+  
+    setLabReport(file);
+    setError(''); // Clear any previous errors
+  };
+  
+  const handleExtractText = async () => {
+    if (!labReport) {
+      setError('No lab report uploaded. You can proceed without uploading a lab report.');
+      setExtractedText(''); // Clear any previously extracted text
+      return;
+    }
+  
+    setLoading(true);
+    setError('');
+    setExtractedText('');
+  
+    try {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const result = await Tesseract.recognize(reader.result, 'eng', {
+            logger: (info) => console.log(info), // Log OCR progress
+          });
+          setExtractedText(result.data.text);
+        } catch (err) {
+          console.error('Error extracting text:', err);
+          setError('Failed to extract text from the lab report. Please try again.');
+        } finally {
+          setLoading(false);
         }
-
-        const data = await response.json();
-        if (data.choices && data.choices[0] && data.choices[0].message) {
-          setTreatmentPlan(data.choices[0].message.content.trim());
-        } else {
-          throw new Error('Invalid API response structure.');
-        }
-      } catch (err) {
-        setError(err.message);
-      } finally {
+      };
+      reader.onerror = () => {
+        setError('Error reading the file. Please try again.');
         setLoading(false);
+      };
+      reader.readAsDataURL(labReport); // Read the file as a data URL
+    } catch (err) {
+      console.error('Error processing the file:', err);
+      setError('Failed to process the lab report. Please try again.');
+      setLoading(false);
+    }
+  };
+
+  // Generate treatment plan using OpenAI
+  const handleGeneratePlan = async () => {
+    // Ensure at least one input is provided: lab report, symptoms, or medical history
+    if (!extractedText && !symptoms && !medicalHistory) {
+      setError('Please upload a lab report or provide symptoms and medical history to generate a treatment plan.');
+      return;
+    }
+  
+    setLoading(true);
+    setError('');
+    setTreatmentPlan('');
+  
+    try {
+      // Prepare the input for the treatment plan
+      const labReportContent = extractedText || 'No lab report provided.';
+      const symptomsContent = symptoms || 'No symptoms provided.';
+      const medicalHistoryContent = medicalHistory || 'No medical history provided.';
+  
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-4',
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a helpful medical assistant that provides treatment plans based on symptoms, medical history, and lab reports.',
+            },
+            {
+              role: 'user',
+              content: `Patient Name: ${patientName}\nSymptoms: ${symptomsContent}\nMedical History: ${medicalHistoryContent}\nLab Report: ${labReportContent}`,
+            },
+          ],
+          max_tokens: 300,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to fetch treatment plan. Please try again.');
       }
-    } else {
-      setError('Please provide patient name, symptoms, and medical history.');
+  
+      const data = await response.json();
+      if (data.choices && data.choices[0] && data.choices[0].message) {
+        setTreatmentPlan(data.choices[0].message.content.trim());
+      } else {
+        throw new Error('Invalid API response structure.');
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const handleSymptomsChange = (e) => {
-    const input = e.target.value;
-    setSymptoms(input);
-    if (input) {
-      const suggestions = symptomsList.filter((symptom) =>
-        symptom.toLowerCase().includes(input.toLowerCase())
-      );
-      setFilteredSymptoms(suggestions);
-    } else {
-      setFilteredSymptoms([]);
-    }
-  };
-
-  const handleMedicalHistoryChange = (e) => {
-    const input = e.target.value;
-    setMedicalHistory(input);
-    if (input) {
-      const suggestions = medicalHistoryList.filter((condition) =>
-        condition.toLowerCase().includes(input.toLowerCase())
-      );
-      setFilteredMedicalHistory(suggestions);
-    } else {
-      setFilteredMedicalHistory([]);
-    }
-  };
-
-  const handleSymptomSelect = (symptom) => {
-    setSymptoms(symptom);
-    setFilteredSymptoms([]);
-  };
-
-  const handleMedicalHistorySelect = (condition) => {
-    setMedicalHistory(condition);
-    setFilteredMedicalHistory([]);
   };
 
   return (
     <div className="treatment-plan-container">
       <h2>AI-Powered Treatment Plans</h2>
       <p className="description">
-        Enter the patient's name, symptoms, and medical history to generate a suggested treatment plan.
+        Upload a medical lab report to analyze and generate a suggested treatment plan.
       </p>
       <div className="form-group">
         <label htmlFor="patientName">Patient Name:</label>
@@ -144,46 +147,65 @@ function TreatmentPlanSuggestion() {
       </div>
       <div className="form-group">
         <label htmlFor="symptoms">Symptoms:</label>
-        <input
-          type="text"
+        <textarea
           id="symptoms"
           value={symptoms}
-          onChange={handleSymptomsChange}
+          onChange={(e) => setSymptoms(e.target.value)}
           placeholder="Enter symptoms (e.g., fever, cough)"
         />
-        {filteredSymptoms.length > 0 && (
-          <ul className="suggestions-list">
-            {filteredSymptoms.map((symptom, index) => (
-              <li key={index} onClick={() => handleSymptomSelect(symptom)}>
-                {symptom}
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
       <div className="form-group">
         <label htmlFor="medicalHistory">Medical History:</label>
-        <input
-          type="text"
+        <textarea
           id="medicalHistory"
           value={medicalHistory}
-          onChange={handleMedicalHistoryChange}
+          onChange={(e) => setMedicalHistory(e.target.value)}
           placeholder="Enter medical history (e.g., diabetes, hypertension)"
         />
-        {filteredMedicalHistory.length > 0 && (
-          <ul className="suggestions-list">
-            {filteredMedicalHistory.map((condition, index) => (
-              <li key={index} onClick={() => handleMedicalHistorySelect(condition)}>
-                {condition}
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
-      <button className="generate-button" onClick={handleGeneratePlan} disabled={loading}>
-        {loading ? 'Generating...' : 'Generate Treatment Plan'}
-      </button>
+      <div className="form-group">
+        <label htmlFor="labReport">Upload Lab Report (Optional):</label>
+        <input type="file" id="labReport" onChange={handleFileUpload} />
+        <p className="optional-note">You can skip this step if you don't have a lab report.</p>
+      </div>
+      <div className="button-container">
+  <button
+    className="extract-button"
+    onClick={handleExtractText}
+    disabled={loading}
+  >
+    {loading ? 'Processing...' : 'Extract Text from Lab Report'}
+  </button>
+  <button
+    className="generate-button"
+    onClick={handleGeneratePlan}
+    disabled={loading || (!extractedText && !symptoms && !medicalHistory)}
+  >
+    {loading ? 'Generating...' : 'Generate Treatment Plan'}
+  </button>
+  <button
+    className="clear-button"
+    onClick={() => {
+      setPatientName('');
+      setSymptoms('');
+      setMedicalHistory('');
+      setLabReport(null);
+      setExtractedText('');
+      setTreatmentPlan('');
+      setError('');
+    }}
+    disabled={loading} // Disable the button while loading
+  >
+    Clear All Fields
+  </button>
+</div>
       {error && <p className="error-message">{error}</p>}
+      {extractedText && (
+        <div className="extracted-text">
+          <h3>Extracted Text:</h3>
+          <p>{extractedText}</p>
+        </div>
+      )}
       {treatmentPlan && (
         <div className="treatment-plan-result">
           <h3>Suggested Treatment Plan:</h3>

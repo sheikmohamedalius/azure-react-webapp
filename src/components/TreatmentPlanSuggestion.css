@@ -1,32 +1,33 @@
 /* General container styling */
 .treatment-plan-container {
-    max-width: 600px;
-    margin: 30px auto;
-    padding: 25px;
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
     background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     font-family: 'Arial', sans-serif;
+    color: #333;
   }
   
   /* Header styling */
   .treatment-plan-container h2 {
     text-align: center;
-    color: #333;
-    margin-bottom: 10px;
+    color: #007bff;
+    font-size: 24px;
+    margin-bottom: 15px;
   }
   
   .description {
     text-align: center;
     color: #666;
-    font-size: 14px;
-    margin-bottom: 20px;
+    font-size: 16px;
+    margin-bottom: 25px;
   }
   
   /* Form group styling */
   .form-group {
     margin-bottom: 20px;
-    position: relative; /* For dropdown positioning */
   }
   
   .form-group label {
@@ -41,62 +42,71 @@
     width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 14px;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
   }
   
   .form-group input:focus,
   .form-group textarea:focus {
     border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     outline: none;
   }
   
   .form-group textarea {
     resize: vertical;
-    height: 100px;
+    height: 120px;
   }
   
-  /* Suggestions dropdown styling */
-  .suggestions-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    max-height: 150px;
-    overflow-y: auto;
-    position: absolute;
-    z-index: 1000;
-    width: 100%;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .suggestions-list li {
-    padding: 10px;
-    cursor: pointer;
+  /* File input styling */
+  .form-group input[type="file"] {
+    padding: 5px;
     font-size: 14px;
-    color: #333;
   }
   
-  .suggestions-list li:hover {
-    background-color: #f0f0f0;
+  /* Button container styling */
+.button-container {
+    display: flex;
+    justify-content: space-between; /* Space between the buttons */
+    gap: 10px; /* Add spacing between buttons */
+    margin-top: 20px; /* Add some margin above the buttons */
   }
   
-  /* Button styling */
-  .generate-button {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
+  /* Extract button styling */
+  .extract-button,
+  .generate-button,
+  .clear-button {
+    flex: 1; /* Make all buttons take equal space */
+    padding: 14px;
+    font-size: 14px;
     font-weight: bold;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  /* Extract button specific styling */
+  .extract-button {
+    background-color: #17a2b8; /* Blue-green for extract button */
+    color: #fff;
+  }
+  
+  .extract-button:hover {
+    background-color: #138496;
+    transform: scale(1.02);
+  }
+  
+  .extract-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  /* Generate button specific styling */
+  .generate-button {
+    background-color: #007bff; /* Blue for generate button */
+    color: #fff;
   }
   
   .generate-button:hover {
@@ -109,6 +119,22 @@
     cursor: not-allowed;
   }
   
+  /* Clear button specific styling */
+  .clear-button {
+    background-color: #dc3545; /* Red for clear button */
+    color: #fff;
+  }
+  
+  .clear-button:hover {
+    background-color: #c82333;
+    transform: scale(1.02);
+  }
+  
+  .clear-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
   /* Error message styling */
   .error-message {
     color: #d9534f;
@@ -117,31 +143,69 @@
     text-align: center;
   }
   
-  /* Container for the treatment plan result */
-  .treatment-plan-result {
+  /* Extracted text container */
+.extracted-text {
     margin-top: 25px;
     padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #d4edda;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    max-height: 300px; /* Set a maximum height */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds max height */
     text-align: left;
   }
   
-  /* Title for the treatment plan */
-  .treatment-plan-result h3 {
+  .extracted-text h3 {
     margin: 0 0 10px;
-    color: #155724;
+    color: #333;
     font-size: 18px;
     font-weight: bold;
   }
   
-  /* Content of the treatment plan */
+  .extracted-text p {
+    margin: 0;
+    color: #555;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap; /* Preserve line breaks */
+    word-wrap: break-word; /* Break long words to prevent overflow */
+  }
+  
+  /* Treatment plan result container */
+.treatment-plan-result {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #e9f7ef;
+    border: 1px solid #d4edda;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    max-height: 300px; /* Set a maximum height */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds max height */
+    text-align: left;
+  }
+  
+  .treatment-plan-result h3 {
+    margin: 0 0 10px;
+    color: #155724;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
   .treatment-plan-content {
     font-size: 16px;
-    color: #333;
+    color: #155724;
     line-height: 1.6;
-    white-space: pre-wrap; /* Preserve line breaks in the treatment plan */
+    white-space: pre-wrap; /* Preserve line breaks in the response */
+    word-wrap: break-word; /* Break long words to prevent overflow */
+  }
+  
+  
+
+  .optional-note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
   }
   
   /* Responsive design for smaller screens */
@@ -150,20 +214,21 @@
       padding: 20px;
     }
   
-    .generate-button {
-      font-size: 14px;
-    }
-  
     .form-group input,
     .form-group textarea {
       font-size: 13px;
     }
   
-    .treatment-plan-result h3 {
-      font-size: 16px;
+    .extract-button,
+    .generate-button {
+      font-size: 14px;
     }
   
-    .treatment-plan-content {
+    .treatment-plan-result h3 {
+      font-size: 18px;
+    }
+  
+    .treatment-plan-result p {
       font-size: 14px;
     }
   }
