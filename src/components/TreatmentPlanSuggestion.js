@@ -113,7 +113,7 @@ function TreatmentPlanSuggestion() {
       });
   
       if (!response.ok) {
-        throw new Error('Failed to fetch treatment plan. Please try again.');
+        throw new Error('Failed to fetch treatment plan. Please try again later.');
       }
   
       const data = await response.json();
